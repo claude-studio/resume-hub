@@ -1,0 +1,14 @@
+@import "@resume-hub/ui/styles.css";
+
+@source "../../../packages/ui/src/**/*.{ts,tsx}";
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: white;
+  color: var(--color-neutral-900, #171717);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

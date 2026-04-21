@@ -1,0 +1,29 @@
+node_modules
+.DS_Store
+
+# Build outputs
+dist
+build
+.next
+.turbo
+.output
+.wxt
+
+# TypeScript
+*.tsbuildinfo
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# IDE
+.idea
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json

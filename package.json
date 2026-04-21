@@ -1,0 +1,28 @@
+{
+  "name": "resume-hub",
+  "version": "0.0.0",
+  "private": true,
+  "description": "통합 이력 관리 서비스 - 웹 서비스와 이력서 자동완성 익스텐션",
+  "packageManager": "pnpm@10.0.0",
+  "engines": {
+    "node": ">=20.18.0"
+  },
+  "scripts": {
+    "dev:service": "pnpm --filter @resume-hub/web-service dev",
+    "dev:extension": "pnpm --filter @resume-hub/web-extension dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.0",
+    "typescript": "^5.9.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@vitejs/plugin-react": "^4.3.4"
+    }
+  }
+}
