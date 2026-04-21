@@ -8,7 +8,8 @@ body {
 }
 
 body {
-  background: white;
-  color: var(--color-neutral-900, #171717);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "lnum", "locl";
 }

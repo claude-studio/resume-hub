@@ -1,7 +1,50 @@
 @import "tailwindcss";
 
+/*
+ * Notion-inspired design tokens.
+ * Source: /DESIGN.md (generated via getdesign@latest add notion)
+ * Keep aligned with DESIGN.md — edit both in sync.
+ */
 @theme {
-  --color-brand-50: oklch(97% 0.02 260);
-  --color-brand-500: oklch(55% 0.22 265);
-  --color-brand-900: oklch(25% 0.12 265);
+  /* Surface & ink */
+  --color-ink: rgba(0, 0, 0, 0.95);
+  --color-ink-soft: rgba(0, 0, 0, 0.9);
+  --color-surface: #ffffff;
+  --color-surface-warm: #f6f5f4;
+  --color-surface-dark: #31302e;
+
+  /* Warm neutral scale */
+  --color-warm-300: #a39e98;
+  --color-warm-500: #615d59;
+  --color-warm-900: #31302e;
+
+  /* Accents */
+  --color-accent: #0075de;
+  --color-accent-hover: #005bab;
+  --color-accent-focus: #097fe8;
+  --color-accent-soft: #f2f9ff;
+  --color-accent-navy: #213183;
+
+  /* Semantic */
+  --color-success: #1aae39;
+  --color-warning: #dd5b00;
+  --color-info: #2a9d99;
+
+  /* Radius */
+  --radius-button: 4px;
+  --radius-card: 12px;
+  --radius-card-lg: 16px;
+  --radius-pill: 9999px;
+
+  /* Borders & shadows */
+  --color-border-whisper: rgba(0, 0, 0, 0.1);
+  --shadow-card:
+    0 4px 18px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.027), 0 0.8px 3px rgba(0, 0, 0, 0.02),
+    0 0.2px 1px rgba(0, 0, 0, 0.01);
+
+  /* Typography */
+  --font-sans:
+    "NotionInter", "Inter", -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+  --tracking-display: -0.033em; /* -2.125px / 64px */
+  --tracking-heading: -0.023em; /* -1.5px / 64px approx */
 }

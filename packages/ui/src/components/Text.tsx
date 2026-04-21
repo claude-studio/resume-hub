@@ -4,18 +4,19 @@ import { cn } from '../utils/cn';
 export interface TextProps extends HTMLAttributes<HTMLParagraphElement> {
   as?: 'p' | 'span' | 'div';
   size?: 'sm' | 'md' | 'lg';
-  tone?: 'default' | 'muted';
+  tone?: 'default' | 'muted' | 'subtle';
 }
 
 const sizeStyles: Record<NonNullable<TextProps['size']>, string> = {
-  sm: 'text-sm',
-  md: 'text-base',
-  lg: 'text-lg',
+  sm: 'text-[14px] leading-[1.43]',
+  md: 'text-[16px] leading-[1.5]',
+  lg: 'text-[20px] leading-[1.4] tracking-[-0.008em]',
 };
 
 const toneStyles: Record<NonNullable<TextProps['tone']>, string> = {
-  default: 'text-neutral-900',
-  muted: 'text-neutral-500',
+  default: 'text-ink',
+  muted: 'text-warm-500',
+  subtle: 'text-warm-300',
 };
 
 export function Text({
