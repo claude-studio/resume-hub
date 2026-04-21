@@ -1,24 +1,14 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { type ProfileEdit, type ProfileRow, profileEditSchema } from '@resume-hub/shared';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { createClient } from '@/lib/supabase/client';
 
-export type ProfileStatus = 'clean' | 'dirty' | 'saving' | 'saved' | 'error';
+export type SaveStatus = 'clean' | 'dirty' | 'saving' | 'saved' | 'error';
 
-type FieldErrors = Partial<Record<keyof ProfileEdit, string>>;
-
-interface UseProfileArgs {
-  initial: ProfileRow;
-}
-
-interface FormValues {
-  fullName: string;
-  phone: string;
-  headline: string;
-}
-
-function rowToFormValues(row: ProfileRow): FormValues {
+function rowToValues(row: ProfileRow): ProfileEdit {
   return {
     fullName: row.full_name,
     phone: row.phone ?? '',
@@ -26,82 +16,81 @@ function rowToFormValues(row: ProfileRow): FormValues {
   };
 }
 
-export function useProfile({ initial }: UseProfileArgs) {
-  const [values, setValues] = useState<FormValues>(() => rowToFormValues(initial));
-  const [baseline, setBaseline] = useState<FormValues>(() => rowToFormValues(initial));
-  const [status, setStatus] = useState<ProfileStatus>('clean');
+export function useProfile({ initial }: { initial: ProfileRow }) {
+  const form = useForm<ProfileEdit>({
+    mode: 'onTouched',
+    resolver: zodResolver(profileEditSchema),
+    defaultValues: rowToValues(initial),
+  });
+
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>('clean');
   const [lastSavedAt, setLastSavedAt] = useState<string>(initial.updated_at);
-  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [serverError, setServerError] = useState<string | null>(null);
   const [spinnerVisible, setSpinnerVisible] = useState(false);
   const spinnerTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const dirty =
-    values.fullName !== baseline.fullName ||
-    values.phone !== baseline.phone ||
-    values.headline !== baseline.headline;
+  const isDirty = form.formState.isDirty;
 
   useEffect(() => {
-    if (status === 'saving' || status === 'error') return;
-    setStatus(dirty ? 'dirty' : 'clean');
-  }, [dirty, status]);
+    // Don't override in-flight writes.
+    if (saveStatus === 'saving') return;
 
-  const setField = useCallback(<K extends keyof FormValues>(key: K, value: FormValues[K]) => {
-    setValues((prev) => ({ ...prev, [key]: value }));
-    setFieldErrors((prev) => ({ ...prev, [key]: undefined }));
-    setServerError(null);
-  }, []);
+    // "저장됨"과 "error" 상태는 다음 편집이 시작되기 전까지 유지.
+    // 사용자가 다시 타이핑하면 dirty로 자연 전이.
+    if (saveStatus === 'saved' || saveStatus === 'error') {
+      if (isDirty) setSaveStatus('dirty');
+      return;
+    }
 
-  const save = useCallback(async () => {
-    const parsed = profileEditSchema.safeParse(values);
-    if (!parsed.success) {
-      const nextErrors: FieldErrors = {};
-      for (const issue of parsed.error.issues) {
-        const key = issue.path[0] as keyof ProfileEdit | undefined;
-        if (key && !nextErrors[key]) {
-          nextErrors[key] = issue.message;
-        }
+    // clean ↔ dirty 일반 전이
+    setSaveStatus(isDirty ? 'dirty' : 'clean');
+  }, [isDirty, saveStatus]);
+
+  const save = useCallback(
+    async (values: ProfileEdit) => {
+      // Nothing changed — skip the network round-trip, just confirm the
+      // "saved" state visually. This keeps the always-enabled save button
+      // from adding DB load when users re-click on an already-clean form.
+      if (!form.formState.isDirty) {
+        setSaveStatus('saved');
+        return;
       }
-      setFieldErrors(nextErrors);
-      return { ok: false as const, firstErrorField: parsed.error.issues[0]?.path[0] as string };
-    }
 
-    setStatus('saving');
-    setServerError(null);
-    spinnerTimerRef.current = setTimeout(() => setSpinnerVisible(true), 200);
+      setSaveStatus('saving');
+      setServerError(null);
+      spinnerTimerRef.current = setTimeout(() => setSpinnerVisible(true), 200);
 
-    const supabase = createClient();
-    const { data, error } = await supabase
-      .from('profiles')
-      .update({
-        full_name: parsed.data.fullName,
-        phone: parsed.data.phone?.trim() || null,
-        headline: parsed.data.headline?.trim() || null,
-      })
-      .eq('user_id', initial.user_id)
-      .select()
-      .single();
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from('profiles')
+        .update({
+          full_name: values.fullName,
+          phone: values.phone?.trim() || null,
+          headline: values.headline?.trim() || null,
+        })
+        .eq('user_id', initial.user_id)
+        .select()
+        .single();
 
-    if (spinnerTimerRef.current) {
-      clearTimeout(spinnerTimerRef.current);
-      spinnerTimerRef.current = null;
-    }
-    setSpinnerVisible(false);
+      if (spinnerTimerRef.current) {
+        clearTimeout(spinnerTimerRef.current);
+        spinnerTimerRef.current = null;
+      }
+      setSpinnerVisible(false);
 
-    if (error || !data) {
-      setStatus('error');
-      setServerError(error?.message ?? '저장에 실패했습니다.');
-      return { ok: false as const };
-    }
+      if (error || !data) {
+        setSaveStatus('error');
+        setServerError(error?.message ?? '저장에 실패했습니다.');
+        return;
+      }
 
-    const row = data as ProfileRow;
-    const next = rowToFormValues(row);
-    setBaseline(next);
-    setValues(next);
-    setLastSavedAt(row.updated_at);
-    setStatus('saved');
-    return { ok: true as const };
-  }, [values, initial.user_id]);
+      const row = data as ProfileRow;
+      form.reset(rowToValues(row), { keepDefaultValues: false });
+      setLastSavedAt(row.updated_at);
+      setSaveStatus('saved');
+    },
+    [initial.user_id, form],
+  );
 
   useEffect(
     () => () => {
@@ -110,16 +99,19 @@ export function useProfile({ initial }: UseProfileArgs) {
     [],
   );
 
+  const onSubmit = form.handleSubmit(save, () => {
+    // Zod validation failed. RHF automatically focuses the first invalid field
+    // via shouldFocusError (default true).
+  });
+
   return {
-    values,
-    setField,
-    status,
-    dirty,
+    form,
+    onSubmit,
+    saveStatus,
     lastSavedAt,
-    fieldErrors,
     serverError,
     spinnerVisible,
-    save,
     email: initial.email,
+    retry: () => onSubmit(),
   };
 }

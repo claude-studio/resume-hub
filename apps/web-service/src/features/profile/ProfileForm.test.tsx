@@ -46,28 +46,42 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('ProfileForm', () => {
+describe('ProfileForm (RHF)', () => {
   it('prefills initial values and marks email read-only', () => {
     render(<ProfileForm initial={baseRow} />);
-    expect(screen.getByLabelText('이름')).toHaveValue('홍길동');
+    expect(screen.getByLabelText(/이름/)).toHaveValue('홍길동');
     const email = screen.getByLabelText('이메일');
     expect(email).toHaveValue('gildong@example.com');
     expect(email).toBeDisabled();
   });
 
-  it('blocks save when name is cleared and shows aria-connected error', async () => {
+  it('marks required field with asterisk and aria-required', () => {
+    render(<ProfileForm initial={baseRow} />);
+    const name = screen.getByLabelText(/이름/);
+    expect(name).toHaveAttribute('aria-required', 'true');
+    // Visual asterisk is aria-hidden; sr-only "(필수)" ensures screen reader coverage
+    expect(screen.getByLabelText(/이름.*\(필수\)/)).toBe(name);
+  });
+
+  it('shows validation error on blur without submit (onTouched)', async () => {
     const user = userEvent.setup();
     render(<ProfileForm initial={baseRow} />);
-
-    const name = screen.getByLabelText('이름');
+    const name = screen.getByLabelText(/이름/);
     await user.clear(name);
-    const saveButton = screen.getByRole('button', { name: /^저장$/ });
-    await user.click(saveButton);
-
+    await user.tab(); // blur triggers onTouched validation
     const error = await screen.findByText('이름을 입력해주세요');
     expect(error).toHaveAttribute('id', 'fullName-error');
     expect(name).toHaveAttribute('aria-invalid', 'true');
     expect(name).toHaveAttribute('aria-describedby', 'fullName-error');
+  });
+
+  it('blocks save when name is invalid and does not call supabase', async () => {
+    const user = userEvent.setup();
+    render(<ProfileForm initial={baseRow} />);
+    const name = screen.getByLabelText(/이름/);
+    await user.clear(name);
+    await user.click(screen.getByRole('button', { name: /^저장$/ }));
+    expect(await screen.findByText('이름을 입력해주세요')).toBeInTheDocument();
     expect(updateMock).not.toHaveBeenCalled();
   });
 
@@ -76,16 +90,28 @@ describe('ProfileForm', () => {
     const user = userEvent.setup();
     render(<ProfileForm initial={baseRow} />);
 
-    const name = screen.getByLabelText('이름');
+    const name = screen.getByLabelText(/이름/);
     await user.clear(name);
     await user.type(name, '이순신');
-
     expect(screen.getByText('· 변경사항 있음')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /^저장$/ }));
 
-    expect(await screen.findByRole('button', { name: '저장됨' })).toBeDisabled();
+    expect(await screen.findByRole('button', { name: '저장됨' })).toBeEnabled();
     expect(updateMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps save button enabled on initial render (always-enabled pattern)', () => {
+    render(<ProfileForm initial={baseRow} />);
+    expect(screen.getByRole('button', { name: /^저장$/ })).toBeEnabled();
+  });
+
+  it('skips network call when clicked without changes', async () => {
+    const user = userEvent.setup();
+    render(<ProfileForm initial={baseRow} />);
+    await user.click(screen.getByRole('button', { name: /^저장$/ }));
+    expect(await screen.findByRole('button', { name: '저장됨' })).toBeInTheDocument();
+    expect(updateMock).not.toHaveBeenCalled();
   });
 
   it('shows server error block when update fails and retains values', async () => {
@@ -93,7 +119,7 @@ describe('ProfileForm', () => {
     const user = userEvent.setup();
     render(<ProfileForm initial={baseRow} />);
 
-    const name = screen.getByLabelText('이름');
+    const name = screen.getByLabelText(/이름/);
     await user.clear(name);
     await user.type(name, '이순신');
     await user.click(screen.getByRole('button', { name: /^저장$/ }));

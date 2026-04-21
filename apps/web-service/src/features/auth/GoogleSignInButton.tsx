@@ -8,22 +8,44 @@ export function GoogleSignInButton() {
   const [isPending, setIsPending] = useState(false);
 
   async function handleClick() {
+    console.log('[google-signin] click received');
     setIsPending(true);
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-    if (error) {
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) {
+        console.error('[google-signin] supabase error:', error);
+        setIsPending(false);
+        window.location.href = '/?error=oauth_failed';
+        return;
+      }
+
+      // 성공 시 supabase-js가 window.location.assign(url)로 이미 리다이렉트했어야
+      // 하지만, 일부 환경에서 자동 리다이렉트가 안 먹는 경우를 대비해 수동 폴백.
+      if (data?.url && typeof window !== 'undefined' && window.location.pathname === '/') {
+        window.location.href = data.url;
+        return;
+      }
+    } catch (err) {
+      console.error('[google-signin] unexpected error:', err);
       setIsPending(false);
       window.location.href = '/?error=oauth_failed';
     }
   }
 
   return (
-    <Button onClick={handleClick} disabled={isPending} aria-label="Google 계정으로 로그인">
+    <Button
+      type="button"
+      onClick={handleClick}
+      disabled={isPending}
+      aria-label="Google 계정으로 로그인"
+    >
       <GoogleMark />
       <span>{isPending ? '로그인 중…' : 'Google로 시작하기'}</span>
     </Button>
