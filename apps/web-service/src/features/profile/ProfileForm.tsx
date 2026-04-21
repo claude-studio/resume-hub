@@ -117,7 +117,7 @@ export function ProfileForm({ initial }: Props) {
             type="text"
             autoComplete="name"
             {...register('fullName')}
-            className="w-full rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface px-3 py-2 text-[16px] text-ink outline-none focus:border-accent-focus"
+            className="w-full min-h-[44px] rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface px-3 py-2 text-[16px] text-ink outline-none transition-[border-color,box-shadow] focus:border-accent-focus focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent-focus)_22%,transparent)]"
           />
         </FormField>
 
@@ -129,7 +129,7 @@ export function ProfileForm({ initial }: Props) {
             readOnly
             disabled
             tabIndex={-1}
-            className="w-full cursor-not-allowed select-all rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface-warm px-3 py-2 text-[16px] text-warm-500"
+            className="w-full min-h-[44px] cursor-not-allowed select-all rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface-warm px-3 py-2 text-[16px] text-warm-500"
           />
         </FormField>
 
@@ -139,7 +139,7 @@ export function ProfileForm({ initial }: Props) {
             autoComplete="tel"
             {...register('phone')}
             placeholder="010-0000-0000"
-            className="w-full rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface px-3 py-2 text-[16px] text-ink outline-none focus:border-accent-focus"
+            className="w-full min-h-[44px] rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface px-3 py-2 text-[16px] text-ink outline-none transition-[border-color,box-shadow] focus:border-accent-focus focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent-focus)_22%,transparent)]"
           />
         </FormField>
 
@@ -167,7 +167,7 @@ export function ProfileForm({ initial }: Props) {
             placeholder="예: 5년차 프론트엔드 개발자, 제품 중심 팀 선호"
             rows={3}
             maxLength={200}
-            className="w-full resize-none rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface px-3 py-2 text-[16px] leading-[1.5] text-ink outline-none focus:border-accent-focus"
+            className="w-full min-h-[88px] resize-none rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface px-3 py-2 text-[16px] leading-[1.5] text-ink outline-none transition-[border-color,box-shadow] focus:border-accent-focus focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent-focus)_22%,transparent)]"
           />
         </FormField>
       </div>

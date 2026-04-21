@@ -109,7 +109,7 @@ description: "Task list for 001-auth-profile implementation"
 - [X] T034 [P] Run `pnpm test` — all Vitest projects green (at minimum: `profile.test.ts` schema + `ProfileForm.test.tsx`)
 - [X] T035 Run manual smoke test per `quickstart.md` Table 5 — OAuth round-trip, save, protected route redirect 모두 검증. 일부 시나리오(세션 만료·이중 제출)는 구현으로 커버되어 수동 재현 불요.
 - [X] T036 [P] Run `/critique` skill on `/` and `/profile` — score 31/40, 5 priority issues 도출. 모두 반영 완료: asterisk 범례, beforeunload 경고, Google 버튼 outline variant, autoComplete 속성, 에러 메시지 구체화, 카운터 danger state, 익스텐션 CTA 정리.
-- [ ] T037 [P] Run `/audit` skill — verify WCAG AA substantive compliance (FR-012) and CWV targets (SC-007); resolve critical findings
+- [X] T037 [P] Run `/audit` skill — score 16/20 (Good). P1 두 건(터치 타겟 < 44px, input focus 링 약함) 즉시 수정: Button md h-10→h-11, input/textarea min-h 44px/88px, focus box-shadow ring 추가. P2·P3는 후속 세션에서 `/polish` 범위.
 - [ ] T038 Run Lighthouse Desktop on deployed preview for `/` and `/profile`; confirm LCP p75 <2.5s, TTFB p75 <500ms (SC-007). Capture numbers in a PR comment.
 - [ ] T039 [P] Run `/polish` skill as final consistency pass on typography, spacing, focus rings, button hover states
 - [X] T040 Verify landing footer shows `privacy@resume-hub.example` (FR-013 requirement) and that this address is monitored or clearly documented as routing target
