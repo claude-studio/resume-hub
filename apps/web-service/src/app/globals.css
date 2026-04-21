@@ -1,6 +1,8 @@
 @import "@resume-hub/ui/styles.css";
 
-@source "../../../packages/ui/src/**/*.{ts,tsx}";
+/* App's own source is auto-detected by Tailwind v4 from this entry CSS.
+ * Shared UI package (@resume-hub/ui) declares its own @source from inside
+ * its stylesheet — no need to reach into the package's internals here. */
 
 html,
 body {

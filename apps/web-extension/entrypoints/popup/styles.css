@@ -1,6 +1,8 @@
 @import "@resume-hub/ui/styles.css";
 
-@source "../../../../packages/ui/src/**/*.{ts,tsx}";
+/* Extension entrypoints live outside the usual auto-detect scope, so we
+ * still need to declare them explicitly. Shared UI sources are declared
+ * from packages/ui/src/styles.css itself — no depth-sensitive path here. */
 @source "../**/*.{ts,tsx}";
 
 body {

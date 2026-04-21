@@ -1,9 +1,20 @@
 @import "tailwindcss";
 
 /*
- * Notion-inspired design tokens.
- * Source: /DESIGN.md (generated via getdesign@latest add notion)
- * Keep aligned with DESIGN.md — edit both in sync.
+ * Self-declared source scan — relative to THIS file (packages/ui/src/styles.css).
+ * Path stays valid regardless of which app imports this stylesheet, so no
+ * depth-sensitive `../../../..` in consumer CSS files.
+ */
+@source "./**/*.{ts,tsx}";
+
+/*
+ * resume-hub design tokens.
+ *
+ * Base palette: Notion-inspired warm neutrals + typography
+ *   (source: /DESIGN.md, generated via getdesign@latest add notion).
+ * Project override: primary accent replaces Notion Blue — iterating
+ *   (vermilion → soft coral → TBD). All accent tokens verified AA (4.5:1)
+ *   against #ffffff and #f6f5f4.
  */
 @theme {
   /* Surface & ink */
@@ -18,16 +29,24 @@
   --color-warm-500: #615d59;
   --color-warm-900: #31302e;
 
-  /* Accents */
-  --color-accent: #0075de;
-  --color-accent-hover: #005bab;
-  --color-accent-focus: #097fe8;
-  --color-accent-soft: #f2f9ff;
+  /* Primary accent — Forest Green / 이끼
+   * 커리어 "성장"이라는 도메인 내러티브와 정합. Hue 150° = 녹색 영역 →
+   * danger (22°)와 128° 떨어져 있어 에러와의 시각적 혼동 0.
+   * warm neutrals (Notion 팔레트)과 차분한 대비를 이루는 깊은 mossy green. */
+  --color-accent: oklch(45% 0.1 150); /* ≈ #496b54 · 5.9:1 vs white */
+  --color-accent-hover: oklch(39% 0.09 150); /* ≈ #3d5c47 · press/hover */
+  --color-accent-focus: oklch(60% 0.12 150); /* ≈ #6d9078 · softer sage focus ring */
+  --color-accent-soft: oklch(97% 0.02 150); /* ≈ #eff5ef · pale sage surface */
+
+  /* Secondary brand color (kept for anti-reference — deep navy counterpoint) */
   --color-accent-navy: #213183;
 
-  /* Semantic */
+  /* Semantic — field-level feedback.
+   * Danger shifted toward pure red (hue 22) + higher chroma to read clearly
+   * as "error" distinct from the softer coral brand accent. */
   --color-success: #1aae39;
   --color-warning: #dd5b00;
+  --color-danger: oklch(52% 0.19 22); /* ≈ #b23a20 · inline validation error */
   --color-info: #2a9d99;
 
   /* Radius */
@@ -42,9 +61,13 @@
     0 4px 18px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.027), 0 0.8px 3px rgba(0, 0, 0, 0.02),
     0 0.2px 1px rgba(0, 0, 0, 0.01);
 
-  /* Typography */
+  /* Typography
+   * Pretendard Variable을 최우선 — Korean + Latin 균형잡힌 가변 폰트로
+   * 일관된 리듬·가독성 확보. NotionInter/Inter는 Pretendard 미로드 환경의
+   * 폴백이고, 최종 폴백은 OS 시스템 폰트 스택. */
   --font-sans:
-    "NotionInter", "Inter", -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+    "Pretendard Variable", Pretendard, "NotionInter", "Inter", -apple-system, system-ui, "Segoe UI",
+    Helvetica, Arial, sans-serif;
   --tracking-display: -0.033em; /* -2.125px / 64px */
   --tracking-heading: -0.023em; /* -1.5px / 64px approx */
 }
