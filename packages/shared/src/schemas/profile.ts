@@ -1,8 +1,3 @@
-/**
- * Contract: Zod validation schema for Profile edits.
- * Source of truth for the implementation at
- * `packages/shared/src/schemas/profile.ts`.
- */
 import { z } from 'zod';
 
 export const profileEditSchema = z.object({
@@ -19,11 +14,6 @@ export const profileEditSchema = z.object({
 
 export type ProfileEdit = z.infer<typeof profileEditSchema>;
 
-/**
- * Full profile shape returned from Supabase (snake_case at DB boundary).
- * Application code converts to/from the camelCase Profile type in
- * @resume-hub/shared via a boundary helper.
- */
 export interface ProfileRow {
   user_id: string;
   full_name: string;

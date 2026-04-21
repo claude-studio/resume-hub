@@ -29,11 +29,11 @@ description: "Task list for 001-auth-profile implementation"
 
 **Purpose**: 필요한 런타임 의존성·환경 설정·마이그레이션 파일 배치.
 
-- [ ] T001 Add `@supabase/supabase-js@^2` and `@supabase/ssr@^0.5` to `apps/web-service/package.json` and install
-- [ ] T002 [P] Add `zod@^3.23` to `packages/shared/package.json` and install
-- [ ] T003 [P] Create `apps/web-service/.env.example` with `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` placeholders
-- [ ] T004 [P] Create `supabase/migrations/0001_profiles.sql` by copying contents verbatim from `specs/001-auth-profile/contracts/rls-policies.sql`
-- [ ] T005 [P] Add `supabase/.gitignore` excluding local `.branches/`, `.temp/` and optional `supabase/config.toml` for local CLI
+- [X] T001 Add `@supabase/supabase-js@^2` and `@supabase/ssr@^0.5` to `apps/web-service/package.json` and install
+- [X] T002 [P] Add `zod@^3.23` to `packages/shared/package.json` and install
+- [X] T003 [P] Create `apps/web-service/.env.example` with `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` placeholders
+- [X] T004 [P] Create `supabase/migrations/0001_profiles.sql` by copying contents verbatim from `specs/001-auth-profile/contracts/rls-policies.sql`
+- [X] T005 [P] Add `supabase/.gitignore` excluding local `.branches/`, `.temp/` and optional `supabase/config.toml` for local CLI
 
 ---
 
@@ -43,15 +43,15 @@ description: "Task list for 001-auth-profile implementation"
 
 **⚠️ CRITICAL**: All user story work blocked until this phase completes.
 
-- [ ] T006 [P] Create `packages/shared/src/schemas/profile.ts` by porting `specs/001-auth-profile/contracts/profile.schema.ts` (exports `profileEditSchema`, `ProfileEdit`, `ProfileRow`)
-- [ ] T007 [P] Create `packages/shared/src/schemas/profile.test.ts` with Vitest cases: valid input, empty name rejected, phone regex enforcement, headline >200 rejected
-- [ ] T008 [P] Add `schemas/profile` re-export in `packages/shared/src/index.ts`
-- [ ] T009 [P] Create `apps/web-service/src/lib/supabase/client.ts` exporting `createClient()` via `createBrowserClient` from `@supabase/ssr`
-- [ ] T010 [P] Create `apps/web-service/src/lib/supabase/server.ts` exporting `createClient()` via `createServerClient` with `next/headers` cookies adapter
-- [ ] T011 [P] Create `apps/web-service/src/lib/supabase/middleware.ts` exporting `updateSession(request)` for token refresh + response cookie mirror
-- [ ] T012 Create `apps/web-service/middleware.ts` at web-service root calling `updateSession` and redirecting unauthenticated access to `/profile` → `/`, and logged-in `/` → `/profile` (matcher excludes static assets)
-- [ ] T013 Apply migration to Supabase project (manual — per `quickstart.md` §2). Verify via `select count(*) from pg_policies where tablename='profiles'` returns 3.
-- [ ] T014 [P] Update `apps/web-service/src/app/layout.tsx` metadata: title `resume-hub`, description per design-brief; ensure `<body class="font-sans">` and `lang="ko"` already set
+- [X] T006 [P] Create `packages/shared/src/schemas/profile.ts` by porting `specs/001-auth-profile/contracts/profile.schema.ts` (exports `profileEditSchema`, `ProfileEdit`, `ProfileRow`)
+- [X] T007 [P] Create `packages/shared/src/schemas/profile.test.ts` with Vitest cases: valid input, empty name rejected, phone regex enforcement, headline >200 rejected
+- [X] T008 [P] Add `schemas/profile` re-export in `packages/shared/src/index.ts`
+- [X] T009 [P] Create `apps/web-service/src/lib/supabase/client.ts` exporting `createClient()` via `createBrowserClient` from `@supabase/ssr`
+- [X] T010 [P] Create `apps/web-service/src/lib/supabase/server.ts` exporting `createClient()` via `createServerClient` with `next/headers` cookies adapter
+- [X] T011 [P] Create `apps/web-service/src/lib/supabase/middleware.ts` exporting `updateSession(request)` for token refresh + response cookie mirror
+- [X] T012 Create `apps/web-service/middleware.ts` at web-service root calling `updateSession` and redirecting unauthenticated access to `/profile` → `/`, and logged-in `/` → `/profile` (matcher excludes static assets)
+- [X] T013 Apply migration to Supabase project (manual — per `quickstart.md` §2). Verify via `select count(*) from pg_policies where tablename='profiles'` returns 3.
+- [X] T014 [P] Update `apps/web-service/src/app/layout.tsx` metadata: title `resume-hub`, description per design-brief; ensure `<body class="font-sans">` and `lang="ko"` already set
 
 **Checkpoint**: Foundation ready. US1과 US2는 이 시점부터 각각(또는 병렬) 시작 가능.
 
@@ -65,12 +65,12 @@ description: "Task list for 001-auth-profile implementation"
 
 ### Implementation for User Story 1
 
-- [ ] T015 [P] [US1] Create `apps/web-service/src/features/auth/GoogleSignInButton.tsx` client component wrapping `packages/ui` Button; calls `supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: '{origin}/auth/callback' } })`
-- [ ] T016 [P] [US1] Create `apps/web-service/src/features/auth/actions.ts` exporting `signOut()` server action that calls `supabase.auth.signOut()` then redirects to `/`
-- [ ] T017 [US1] Implement `apps/web-service/src/app/auth/callback/route.ts` GET handler: read `code` param, call `supabase.auth.exchangeCodeForSession(code)`, redirect to `/profile` on success; on failure redirect to `/?error=oauth_failed` preserving original return target
-- [ ] T018 [US1] Build landing hero at `apps/web-service/src/app/page.tsx` per design-brief §4: single-screen layout, brand wordmark, 54px headline `"이력은 한 번만 쓴다"`, 20px subcopy, Google CTA + ghost "익스텐션 받기" (disabled with `title="곧 공개됩니다"`), thin footer with `privacy@…`
-- [ ] T019 [US1] Handle landing `?error=cancelled|oauth_failed` with a quietly fading info banner (3s) above headline; do not shift layout
-- [ ] T020 [US1] Verify protected route: `middleware.ts` (T012) redirects unauthenticated `/profile` to `/` and already-authenticated `/` to `/profile`. Add a minimal log assertion or manual QA note in quickstart.
+- [X] T015 [P] [US1] Create `apps/web-service/src/features/auth/GoogleSignInButton.tsx` client component wrapping `packages/ui` Button; calls `supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: '{origin}/auth/callback' } })`
+- [X] T016 [P] [US1] Create `apps/web-service/src/features/auth/actions.ts` exporting `signOut()` server action that calls `supabase.auth.signOut()` then redirects to `/`
+- [X] T017 [US1] Implement `apps/web-service/src/app/auth/callback/route.ts` GET handler: read `code` param, call `supabase.auth.exchangeCodeForSession(code)`, redirect to `/profile` on success; on failure redirect to `/?error=oauth_failed` preserving original return target
+- [X] T018 [US1] Build landing hero at `apps/web-service/src/app/page.tsx` per design-brief §4: single-screen layout, brand wordmark, 54px headline `"이력은 한 번만 쓴다"`, 20px subcopy, Google CTA + ghost "익스텐션 받기" (disabled with `title="곧 공개됩니다"`), thin footer with `privacy@…`
+- [X] T019 [US1] Handle landing `?error=cancelled|oauth_failed` with a quietly fading info banner (3s) above headline; do not shift layout
+- [X] T020 [US1] Verify protected route: `middleware.ts` (T012) redirects unauthenticated `/profile` to `/` and already-authenticated `/` to `/profile`. Add a minimal log assertion or manual QA note in quickstart.
 
 **Checkpoint**: US1 complete. Sign-in round-trip works; `/profile` shows a stub "프로필" heading only (full form lives in US2).
 
@@ -84,17 +84,17 @@ description: "Task list for 001-auth-profile implementation"
 
 ### Implementation for User Story 2
 
-- [ ] T021 [US2] Create `apps/web-service/src/app/profile/page.tsx` server component: instantiate server Supabase client (T010), fetch `profiles` row for `auth.user()`, render `<ProfileHeader>` + `<ProfileForm initial={row}>`. Apply `export const dynamic = 'force-dynamic'` since data is user-specific.
-- [ ] T022 [US2] Create `apps/web-service/src/features/profile/ProfileHeader.tsx` — brand wordmark (left), masked email `{local}@…` (right), logout link wired to `signOut` action (T016)
-- [ ] T023 [P] [US2] Create `apps/web-service/src/features/profile/ProfileForm.tsx` client component: controlled form with 4 fields per design-brief §4/§7, labels + `aria-describedby` error slots, auto-focus on `full_name`, `Ctrl/Cmd+S` handler, textarea live counter `N / 200` with accent color ≥160
-- [ ] T024 [P] [US2] Create `apps/web-service/src/features/profile/useProfile.ts` hook: holds form state, dirty flag, save mutation calling `supabase.from('profiles').update(...).eq('user_id', uid)`, 200ms timer gating spinner visibility, returns `{values, setField, dirty, save, status: 'clean'|'dirty'|'saving'|'saved'|'error', lastSavedAt}`
-- [ ] T025 [US2] Wire Zod validation inside `useProfile`: on save attempt run `profileEditSchema.safeParse`; on failure set per-field errors and focus first invalid input; block network call
-- [ ] T026 [US2] Render save-state line above fields in ProfileForm: `저장됨 · {포맷된 시각}` when clean, `· 변경사항 있음` when dirty, `저장 중…` when saving; tone `text-warm-500`
-- [ ] T027 [US2] Render save button per design-brief: `저장` (primary) / `저장 중…` / `저장됨` (disabled clean); right-aligned at form bottom; ensure it is last Tab stop before logout link
-- [ ] T028 [US2] Render server error block beneath form on `status==='error'`: whisper-bordered container + single-line message + "다시 시도" ghost button that re-invokes save
-- [ ] T029 [US2] Implement session-expired-during-save handling in `useProfile`: on 401-like response, call `supabase.auth.refreshSession()`; if fails, persist form values to `sessionStorage` and redirect to `/?return=profile` (restore on next mount)
-- [ ] T030 [P] [US2] Create `apps/web-service/src/features/profile/ProfileForm.test.tsx` RTL tests (Supabase client mocked): renders prefilled values, blocks save on empty name with aria error, transitions through dirty→saving→saved, preserves values on simulated server error
-- [ ] T031 [US2] Reduced-motion support: guard any transition/fade (banner, counter color change, spinner entrance) behind `@media (prefers-reduced-motion: reduce)` per `.impeccable.md` motion budget
+- [X] T021 [US2] Create `apps/web-service/src/app/profile/page.tsx` server component: instantiate server Supabase client (T010), fetch `profiles` row for `auth.user()`, render `<ProfileHeader>` + `<ProfileForm initial={row}>`. Apply `export const dynamic = 'force-dynamic'` since data is user-specific.
+- [X] T022 [US2] Create `apps/web-service/src/features/profile/ProfileHeader.tsx` — brand wordmark (left), masked email `{local}@…` (right), logout link wired to `signOut` action (T016)
+- [X] T023 [P] [US2] Create `apps/web-service/src/features/profile/ProfileForm.tsx` client component: controlled form with 4 fields per design-brief §4/§7, labels + `aria-describedby` error slots, auto-focus on `full_name`, `Ctrl/Cmd+S` handler, textarea live counter `N / 200` with accent color ≥160
+- [X] T024 [P] [US2] Create `apps/web-service/src/features/profile/useProfile.ts` hook: holds form state, dirty flag, save mutation calling `supabase.from('profiles').update(...).eq('user_id', uid)`, 200ms timer gating spinner visibility, returns `{values, setField, dirty, save, status: 'clean'|'dirty'|'saving'|'saved'|'error', lastSavedAt}`
+- [X] T025 [US2] Wire Zod validation inside `useProfile`: on save attempt run `profileEditSchema.safeParse`; on failure set per-field errors and focus first invalid input; block network call
+- [X] T026 [US2] Render save-state line above fields in ProfileForm: `저장됨 · {포맷된 시각}` when clean, `· 변경사항 있음` when dirty, `저장 중…` when saving; tone `text-warm-500`
+- [X] T027 [US2] Render save button per design-brief: `저장` (primary) / `저장 중…` / `저장됨` (disabled clean); right-aligned at form bottom; ensure it is last Tab stop before logout link
+- [X] T028 [US2] Render server error block beneath form on `status==='error'`: whisper-bordered container + single-line message + "다시 시도" ghost button that re-invokes save
+- [X] T029 [US2] Implement session-expired-during-save handling in `useProfile`: on 401-like response, call `supabase.auth.refreshSession()`; if fails, persist form values to `sessionStorage` and redirect to `/?return=profile` (restore on next mount)
+- [X] T030 [P] [US2] Create `apps/web-service/src/features/profile/ProfileForm.test.tsx` RTL tests (Supabase client mocked): renders prefilled values, blocks save on empty name with aria error, transitions through dirty→saving→saved, preserves values on simulated server error
+- [X] T031 [US2] Reduced-motion support: guard any transition/fade (banner, counter color change, spinner entrance) behind `@media (prefers-reduced-motion: reduce)` per `.impeccable.md` motion budget
 
 **Checkpoint**: US2 complete. MVP fully delivered. `pnpm test` · `pnpm typecheck` · `pnpm lint` green.
 
@@ -104,15 +104,15 @@ description: "Task list for 001-auth-profile implementation"
 
 **Purpose**: MVP 품질 검증 및 배포 준비.
 
-- [ ] T032 [P] Run `pnpm typecheck` — fix any residual type errors introduced during implementation
-- [ ] T033 [P] Run `pnpm lint:fix` — resolve Biome violations
-- [ ] T034 [P] Run `pnpm test` — all Vitest projects green (at minimum: `profile.test.ts` schema + `ProfileForm.test.tsx`)
+- [X] T032 [P] Run `pnpm typecheck` — fix any residual type errors introduced during implementation
+- [X] T033 [P] Run `pnpm lint:fix` — resolve Biome violations
+- [X] T034 [P] Run `pnpm test` — all Vitest projects green (at minimum: `profile.test.ts` schema + `ProfileForm.test.tsx`)
 - [ ] T035 Run manual smoke test per `quickstart.md` Table 5 (scenarios 1–14) against local Supabase instance; record pass/fail in the quickstart §7 checkboxes
 - [ ] T036 [P] Run `/critique` skill on rendered `/` and `/profile` (via dev server screenshots) for persona-based UX review; address P0/P1 findings
 - [ ] T037 [P] Run `/audit` skill — verify WCAG AA substantive compliance (FR-012) and CWV targets (SC-007); resolve critical findings
 - [ ] T038 Run Lighthouse Desktop on deployed preview for `/` and `/profile`; confirm LCP p75 <2.5s, TTFB p75 <500ms (SC-007). Capture numbers in a PR comment.
 - [ ] T039 [P] Run `/polish` skill as final consistency pass on typography, spacing, focus rings, button hover states
-- [ ] T040 Verify landing footer shows `privacy@resume-hub.example` (FR-013 requirement) and that this address is monitored or clearly documented as routing target
+- [X] T040 Verify landing footer shows `privacy@resume-hub.example` (FR-013 requirement) and that this address is monitored or clearly documented as routing target
 
 ---
 
