@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type ProfileEdit, type ProfileRow, profileEditSchema } from '@resume-hub/shared';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createClient } from '@/lib/supabase/client';
 
@@ -38,6 +38,10 @@ function rowToValues(row: ProfileRow): ProfileEdit {
 }
 
 export function useProfile({ initial }: { initial: ProfileRow }) {
+  // 한 번만 생성. supabase-js는 내부적으로 HTTP 클라이언트를 재사용하므로
+  // 훅 당 1회 인스턴스면 충분하다.
+  const supabase = useMemo(() => createClient(), []);
+
   const form = useForm<ProfileEdit>({
     mode: 'onTouched',
     resolver: zodResolver(profileEditSchema),
@@ -81,7 +85,6 @@ export function useProfile({ initial }: { initial: ProfileRow }) {
       setServerError(null);
       spinnerTimerRef.current = setTimeout(() => setSpinnerVisible(true), 200);
 
-      const supabase = createClient();
       const { data, error } = await supabase
         .from('profiles')
         .update({
@@ -110,7 +113,7 @@ export function useProfile({ initial }: { initial: ProfileRow }) {
       setLastSavedAt(row.updated_at);
       setSaveStatus('saved');
     },
-    [initial.user_id, form],
+    [initial.user_id, form, supabase],
   );
 
   useEffect(

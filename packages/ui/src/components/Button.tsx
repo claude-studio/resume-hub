@@ -18,11 +18,11 @@ const variantStyles: Record<NonNullable<ButtonProps['variant']>, string> = {
 
 const sizeStyles: Record<NonNullable<ButtonProps['size']>, string> = {
   // xs — 인라인 텍스트 링크 대체용. 모바일 주 타겟으로 쓰지 말 것.
-  xs: 'h-7 px-2 text-[13px]',
+  xs: 'h-7 px-2 text-[0.8125rem]',
   // sm — 보조 액션 (다시 시도 등). 좁은 영역 또는 버튼이 텍스트 옆에 붙어 설명을 받쳐줄 때.
   sm: 'h-9 px-3 text-sm',
   // md — 기본 CTA. WCAG 2.5.5 AAA (44×44) 만족.
-  md: 'h-11 min-w-[44px] px-4 text-[15px] font-semibold',
+  md: 'h-11 min-w-[44px] px-4 text-[0.9375rem] font-semibold',
 };
 
 export function Button({ variant = 'primary', size = 'md', className, ...props }: ButtonProps) {

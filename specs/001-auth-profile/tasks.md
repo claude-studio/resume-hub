@@ -111,7 +111,7 @@ description: "Task list for 001-auth-profile implementation"
 - [X] T036 [P] Run `/critique` skill on `/` and `/profile` — score 31/40, 5 priority issues 도출. 모두 반영 완료: asterisk 범례, beforeunload 경고, Google 버튼 outline variant, autoComplete 속성, 에러 메시지 구체화, 카운터 danger state, 익스텐션 CTA 정리.
 - [X] T037 [P] Run `/audit` skill — score 16/20 (Good). P1 두 건(터치 타겟 < 44px, input focus 링 약함) 즉시 수정: Button md h-10→h-11, input/textarea min-h 44px/88px, focus box-shadow ring 추가. P2·P3는 후속 세션에서 `/polish` 범위.
 - [ ] T038 Run Lighthouse Desktop on deployed preview for `/` and `/profile`; confirm LCP p75 <2.5s, TTFB p75 <500ms (SC-007). Capture numbers in a PR comment.
-- [ ] T039 [P] Run `/polish` skill as final consistency pass on typography, spacing, focus rings, button hover states
+- [X] T039 [P] Run `/polish` skill — P2/P3 5건 일괄 반영: px→rem 마이그레이션 (text-[Npx] → text-base/sm/xs/[0.8125rem] 등), LandingErrorNotice 자동 dismiss 제거 + 닫기 버튼, ProfileHeader 이메일 16ch truncate, Supabase 클라이언트 훅 내 메모이즈, DOM 순서 조정으로 Tab 시작점을 Form으로 이동.
 - [X] T040 Verify landing footer shows `privacy@resume-hub.example` (FR-013 requirement) and that this address is monitored or clearly documented as routing target
 
 ---

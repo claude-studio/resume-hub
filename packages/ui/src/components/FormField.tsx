@@ -46,7 +46,7 @@ export function FormField({
   return (
     <div className={cn('flex flex-col gap-1.5', className)}>
       <div className="flex items-baseline justify-between gap-2">
-        <label htmlFor={id} className="text-[14px] font-medium text-ink">
+        <label htmlFor={id} className="text-sm font-medium text-ink">
           {required && (
             <span aria-hidden="true" className="font-semibold text-[color:var(--color-accent)]">
               *
@@ -59,12 +59,12 @@ export function FormField({
       </div>
       {injected}
       {hint && !error && (
-        <p id={hintId} className="text-[13px] text-warm-500">
+        <p id={hintId} className="text-[0.8125rem] text-warm-500">
           {hint}
         </p>
       )}
       {error && (
-        <p id={errorId} className="text-[13px] text-[color:var(--color-danger)]">
+        <p id={errorId} className="text-[0.8125rem] text-[color:var(--color-danger)]">
           {error}
         </p>
       )}

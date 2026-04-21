@@ -95,17 +95,19 @@ export function ProfileForm({ initial }: Props) {
       aria-label="프로필 편집"
     >
       <div className="flex flex-col gap-3">
-        <h1 className="text-[40px] font-bold leading-[1.1] tracking-[-0.012em] text-ink">프로필</h1>
-        <p className="text-[16px] leading-[1.5] text-warm-500">
+        <h1 className="text-[2.5rem] font-bold leading-[1.1] tracking-[-0.012em] text-ink">
+          프로필
+        </h1>
+        <p className="text-base leading-[1.5] text-warm-500">
           플랫폼 이력서 폼이 자동으로 채울 기본 정보입니다.
         </p>
-        <p className="text-[12px] leading-[1.5] text-warm-500">
+        <p className="text-xs leading-[1.5] text-warm-500">
           <span aria-hidden="true" className="font-semibold text-[color:var(--color-accent)]">
             *
           </span>
           가 붙은 항목은 필수입니다.
         </p>
-        <p role="status" aria-live="polite" className="text-[14px] leading-[1.43] text-warm-500">
+        <p role="status" aria-live="polite" className="text-sm leading-[1.43] text-warm-500">
           {spinnerVisible && <SpinnerGlyph />}
           {statusLine}
         </p>
@@ -117,7 +119,7 @@ export function ProfileForm({ initial }: Props) {
             type="text"
             autoComplete="name"
             {...register('fullName')}
-            className="w-full min-h-[44px] rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface px-3 py-2 text-[16px] text-ink outline-none transition-[border-color,box-shadow] focus:border-accent-focus focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent-focus)_22%,transparent)]"
+            className="w-full min-h-[44px] rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface px-3 py-2 text-base text-ink outline-none transition-[border-color,box-shadow] focus:border-accent-focus focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent-focus)_22%,transparent)]"
           />
         </FormField>
 
@@ -129,7 +131,7 @@ export function ProfileForm({ initial }: Props) {
             readOnly
             disabled
             tabIndex={-1}
-            className="w-full min-h-[44px] cursor-not-allowed select-all rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface-warm px-3 py-2 text-[16px] text-warm-500"
+            className="w-full min-h-[44px] cursor-not-allowed select-all rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface-warm px-3 py-2 text-base text-warm-500"
           />
         </FormField>
 
@@ -139,7 +141,7 @@ export function ProfileForm({ initial }: Props) {
             autoComplete="tel"
             {...register('phone')}
             placeholder="010-0000-0000"
-            className="w-full min-h-[44px] rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface px-3 py-2 text-[16px] text-ink outline-none transition-[border-color,box-shadow] focus:border-accent-focus focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent-focus)_22%,transparent)]"
+            className="w-full min-h-[44px] rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface px-3 py-2 text-base text-ink outline-none transition-[border-color,box-shadow] focus:border-accent-focus focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent-focus)_22%,transparent)]"
           />
         </FormField>
 
@@ -150,7 +152,7 @@ export function ProfileForm({ initial }: Props) {
           trailing={
             <output
               htmlFor="headline"
-              className={`text-[13px] ${
+              className={`text-[0.8125rem] ${
                 headlineAtMax
                   ? 'font-medium text-[color:var(--color-danger)]'
                   : headlineWarn
@@ -167,7 +169,7 @@ export function ProfileForm({ initial }: Props) {
             placeholder="예: 5년차 프론트엔드 개발자, 제품 중심 팀 선호"
             rows={3}
             maxLength={200}
-            className="w-full min-h-[88px] resize-none rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface px-3 py-2 text-[16px] leading-[1.5] text-ink outline-none transition-[border-color,box-shadow] focus:border-accent-focus focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent-focus)_22%,transparent)]"
+            className="w-full min-h-[88px] resize-none rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface px-3 py-2 text-base leading-[1.5] text-ink outline-none transition-[border-color,box-shadow] focus:border-accent-focus focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent-focus)_22%,transparent)]"
           />
         </FormField>
       </div>
@@ -175,7 +177,7 @@ export function ProfileForm({ initial }: Props) {
       {serverError && (
         <div
           role="alert"
-          className="flex flex-col gap-2 rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface-warm px-4 py-3 text-[14px] text-ink"
+          className="flex flex-col gap-2 rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface-warm px-4 py-3 text-sm text-ink"
         >
           <span>{serverError}</span>
           <div>
@@ -199,7 +201,7 @@ function SpinnerGlyph() {
   return (
     <span
       aria-hidden="true"
-      className="mr-1 inline-block h-[10px] w-[10px] animate-spin rounded-full border border-warm-300 border-t-warm-500 align-[-1px] motion-reduce:animate-none"
+      className="mr-1 inline-block h-[0.625rem] w-[0.625rem] animate-spin rounded-full border border-warm-300 border-t-warm-500 align-[-1px] motion-reduce:animate-none"
     />
   );
 }

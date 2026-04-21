@@ -1,17 +1,16 @@
 'use client';
 
 import { Button } from '@resume-hub/ui';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 
 export function GoogleSignInButton() {
   const [isPending, setIsPending] = useState(false);
+  const supabase = useMemo(() => createClient(), []);
 
   async function handleClick() {
-    console.log('[google-signin] click received');
     setIsPending(true);
     try {
-      const supabase = createClient();
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
