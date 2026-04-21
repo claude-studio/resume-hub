@@ -124,7 +124,8 @@ describe('ProfileForm (RHF)', () => {
     await user.type(name, '이순신');
     await user.click(screen.getByRole('button', { name: /^저장$/ }));
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('저장에 실패했습니다');
+    // mapSaveError의 fallback 케이스: "저장에 실패했습니다. {error.message}"
+    expect(await screen.findByRole('alert')).toHaveTextContent(/저장에 실패했습니다/);
     expect(screen.getByRole('button', { name: '다시 시도' })).toBeEnabled();
     expect(name).toHaveValue('이순신');
   });

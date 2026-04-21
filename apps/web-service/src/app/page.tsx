@@ -1,4 +1,3 @@
-import { Button } from '@resume-hub/ui';
 import { Suspense } from 'react';
 import { GoogleSignInButton } from '@/features/auth/GoogleSignInButton';
 import { LandingErrorNotice } from '@/features/auth/LandingErrorNotice';
@@ -26,10 +25,10 @@ export default function LandingPage() {
 
         <div className="mt-2 flex flex-wrap items-center gap-3">
           <GoogleSignInButton />
-          <Button variant="ghost" disabled title="곧 공개됩니다" aria-disabled="true">
-            익스텐션 받기
-          </Button>
         </div>
+        <p className="text-[13px] text-warm-500">
+          브라우저 익스텐션은 곧 공개됩니다 · 이력은 웹에서 먼저 입력해두세요.
+        </p>
       </section>
 
       <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-[color:var(--color-border-whisper)] pt-4 text-[13px] text-warm-500">

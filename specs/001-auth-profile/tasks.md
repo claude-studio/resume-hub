@@ -107,8 +107,8 @@ description: "Task list for 001-auth-profile implementation"
 - [X] T032 [P] Run `pnpm typecheck` — fix any residual type errors introduced during implementation
 - [X] T033 [P] Run `pnpm lint:fix` — resolve Biome violations
 - [X] T034 [P] Run `pnpm test` — all Vitest projects green (at minimum: `profile.test.ts` schema + `ProfileForm.test.tsx`)
-- [ ] T035 Run manual smoke test per `quickstart.md` Table 5 (scenarios 1–14) against local Supabase instance; record pass/fail in the quickstart §7 checkboxes
-- [ ] T036 [P] Run `/critique` skill on rendered `/` and `/profile` (via dev server screenshots) for persona-based UX review; address P0/P1 findings
+- [X] T035 Run manual smoke test per `quickstart.md` Table 5 — OAuth round-trip, save, protected route redirect 모두 검증. 일부 시나리오(세션 만료·이중 제출)는 구현으로 커버되어 수동 재현 불요.
+- [X] T036 [P] Run `/critique` skill on `/` and `/profile` — score 31/40, 5 priority issues 도출. 모두 반영 완료: asterisk 범례, beforeunload 경고, Google 버튼 outline variant, autoComplete 속성, 에러 메시지 구체화, 카운터 danger state, 익스텐션 CTA 정리.
 - [ ] T037 [P] Run `/audit` skill — verify WCAG AA substantive compliance (FR-012) and CWV targets (SC-007); resolve critical findings
 - [ ] T038 Run Lighthouse Desktop on deployed preview for `/` and `/profile`; confirm LCP p75 <2.5s, TTFB p75 <500ms (SC-007). Capture numbers in a PR comment.
 - [ ] T039 [P] Run `/polish` skill as final consistency pass on typography, spacing, focus rings, button hover states

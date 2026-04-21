@@ -8,6 +8,27 @@ import { createClient } from '@/lib/supabase/client';
 
 export type SaveStatus = 'clean' | 'dirty' | 'saving' | 'saved' | 'error';
 
+/**
+ * Supabase 에러 객체를 사용자 친화 메시지로 매핑.
+ * - JWT/session 만료 → 재로그인 안내
+ * - RLS 위반 (42501) → 권한 오류
+ * - 네트워크/기타 → 기본 메시지 (+ 원인 힌트)
+ */
+function mapSaveError(error: { code?: string; message?: string } | null | undefined): string {
+  if (!error) return '저장에 실패했습니다. 잠시 후 다시 시도해주세요.';
+  const msg = error.message ?? '';
+  if (error.code === '42501' || /row-level security/i.test(msg)) {
+    return '권한이 없습니다. 다시 로그인 후 시도해주세요.';
+  }
+  if (/jwt|session|unauthenticated/i.test(msg)) {
+    return '세션이 만료되었습니다. 다시 로그인 후 시도해주세요.';
+  }
+  if (/network|fetch|failed to fetch/i.test(msg)) {
+    return '네트워크 연결을 확인하고 다시 시도해주세요.';
+  }
+  return `저장에 실패했습니다. ${msg || '잠시 후 다시 시도해주세요.'}`;
+}
+
 function rowToValues(row: ProfileRow): ProfileEdit {
   return {
     fullName: row.full_name,
@@ -80,7 +101,7 @@ export function useProfile({ initial }: { initial: ProfileRow }) {
 
       if (error || !data) {
         setSaveStatus('error');
-        setServerError(error?.message ?? '저장에 실패했습니다.');
+        setServerError(mapSaveError(error));
         return;
       }
 

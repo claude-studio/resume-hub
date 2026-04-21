@@ -4,14 +4,17 @@
 
 ## 디자인 시스템
 
-- **단일 참고 문서**: 프로젝트 루트 `DESIGN.md` (Notion inspired, via `getdesign@latest`).
-  UI 코드를 작성하거나 수정하기 전에 반드시 해당 파일을 먼저 읽습니다.
-- **토큰 레이어**: `packages/ui/src/styles.css`의 `@theme` 블록이 `DESIGN.md` 값을 Tailwind v4 토큰으로 노출합니다.
-  - 색 → `bg-accent`, `text-ink`, `text-warm-500`, `border-[color:var(--color-border-whisper)]` 등
-  - 라운드 → `rounded-[4px]`(버튼), `rounded-[12px]`(카드), `rounded-full`(pill)
+- **참고 문서 2단 구조**:
+  - `DESIGN.md` — Notion 시스템 원천 (warm neutrals · 타이포그래피 · 여백 규칙). 구조·리듬·anti-pattern 참고용.
+  - `.impeccable.md` — 프로젝트 override를 담은 디자인 컨텍스트 (브랜드 컬러·페르소나·톤). UI 작성 전 먼저 읽기.
+- **토큰 레이어**: `packages/ui/src/styles.css`의 `@theme` 블록이 Tailwind v4 토큰으로 노출합니다. **파일이 자기 자신 `@source` 선언을 가지므로** 소비 앱의 CSS에서는 `@import "@resume-hub/ui/styles.css"` 한 줄만 있으면 됩니다 (깊은 상대경로 사용 금지).
+  - 색 → `bg-accent`(Forest Green), `text-ink`, `text-warm-500`, `text-[color:var(--color-danger)]`, `border-[color:var(--color-border-whisper)]` 등
+  - 라운드 → `rounded-[4px]`(버튼·인풋), `rounded-[12px]`(카드), `rounded-full`(pill)
   - 섀도우 → `shadow-[var(--shadow-card)]`
-  - 폰트 → `font-sans` (NotionInter fallback chain)
-- **원칙**: 근본 상수(hex, rem)를 컴포넌트에 직접 박지 말고 토큰/유틸로 표현합니다. `DESIGN.md`에 없는 값은 먼저 문서에 추가한 뒤 토큰화합니다.
+  - 폰트 → `font-sans` (Pretendard Variable → Pretendard → NotionInter → Inter → system)
+- **브랜드 컬러 히스토리**: Notion Blue → 다홍 → Soft Coral → **Forest Green** (`oklch(45% 0.10 150)`). 붉은 계열이 danger와 시각 혼동을 일으켜 green으로 정착. 원칙: hue 거리 100° 이상을 accent/danger 사이에 유지.
+- **컴포넌트 프리미티브**: `Button` (primary·secondary·ghost·outline + xs·sm·md), `FormField` (label + 필수 asterisk + error/hint + 자동 ARIA), `Text`.
+- **원칙**: 근본 상수(hex, rem)를 컴포넌트에 직접 박지 말고 토큰/유틸로 표현합니다. `.impeccable.md`에 없는 새 브랜드 결정은 먼저 문서에 추가한 뒤 토큰화합니다.
 
 ## impeccable 스킬
 

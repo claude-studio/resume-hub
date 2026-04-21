@@ -10,7 +10,7 @@
 ## Technical Context
 
 **Language/Version**: TypeScript 5.9, Node.js ≥20.18  
-**Primary Dependencies**: Next.js 15 (App Router) · React 19 · Tailwind CSS v4 · `@supabase/supabase-js` v2 · `@supabase/ssr` · Supabase Auth (Google provider)  
+**Primary Dependencies**: Next.js 15 (App Router) · React 19 · Tailwind CSS v4 · `@supabase/supabase-js` v2 · `@supabase/ssr` · Supabase Auth (Google provider) · `react-hook-form` 7 + `@hookform/resolvers` (zod) · Pretendard Variable 폰트  
 **Storage**: Supabase Postgres (managed), `profiles` 테이블 + RLS 정책  
 **Testing**: Vitest (unit, 공용 유틸/스키마) + @testing-library/react (UI 렌더링). 인증 흐름은 수동 E2E로 검증(quickstart 참조)  
 **Target Platform**: 데스크톱·모바일 모던 브라우저(Chrome, Safari, Edge, Firefox latest)  

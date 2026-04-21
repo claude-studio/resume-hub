@@ -42,9 +42,11 @@ export function GoogleSignInButton() {
   return (
     <Button
       type="button"
+      variant="outline"
       onClick={handleClick}
       disabled={isPending}
       aria-label="Google 계정으로 로그인"
+      className="gap-2"
     >
       <GoogleMark />
       <span>{isPending ? '로그인 중…' : 'Google로 시작하기'}</span>
