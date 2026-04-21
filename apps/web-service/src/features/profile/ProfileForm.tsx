@@ -1,6 +1,6 @@
 'use client';
 
-import type { ProfileRow } from '@resume-hub/shared';
+import { codePointCount, type ProfileRow } from '@resume-hub/shared';
 import { Button, FormField } from '@resume-hub/ui';
 import { type FormEvent, useEffect } from 'react';
 import { useProfile } from './useProfile';
@@ -68,6 +68,11 @@ export function ProfileForm({ initial }: Props) {
   const headlineLen = headlineValue.length;
   const headlineAtMax = headlineLen >= 200;
   const headlineWarn = headlineLen >= 160 && !headlineAtMax;
+
+  const summaryValue = watch('summary') ?? '';
+  const summaryLen = codePointCount(summaryValue);
+  const summaryAtMax = summaryLen >= 1000;
+  const summaryWarn = summaryLen >= 800 && !summaryAtMax;
 
   const saveButtonLabel =
     saveStatus === 'saving' ? '저장 중…' : saveStatus === 'saved' && !isDirty ? '저장됨' : '저장';
@@ -170,6 +175,35 @@ export function ProfileForm({ initial }: Props) {
             rows={3}
             maxLength={200}
             className="w-full min-h-[88px] resize-none rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface px-3 py-2 text-base leading-[1.5] text-ink outline-none transition-[border-color,box-shadow] focus:border-accent-focus focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent-focus)_22%,transparent)]"
+          />
+        </FormField>
+
+        <FormField
+          id="summary"
+          label="자기소개"
+          error={errors.summary?.message}
+          trailing={
+            <output
+              htmlFor="summary"
+              className={`text-[0.8125rem] ${
+                summaryAtMax
+                  ? 'font-medium text-[color:var(--color-danger)]'
+                  : summaryWarn
+                    ? 'text-accent-focus'
+                    : 'text-warm-500'
+              }`}
+            >
+              {summaryLen} / 1000
+            </output>
+          }
+        >
+          <textarea
+            {...register('summary')}
+            placeholder="예: 5년차 프로덕트 매니저로서 B2B SaaS에서 도메인 전문성을 쌓아왔습니다. 이해관계자 정렬과 데이터 기반 의사결정을 강점으로 꼽습니다."
+            rows={5}
+            maxLength={1000}
+            autoComplete="off"
+            className="w-full min-h-[7.5rem] resize-none rounded-[4px] border border-[color:var(--color-border-whisper)] bg-surface px-3 py-2 text-base leading-[1.5] text-ink outline-none transition-[border-color,box-shadow] focus:border-accent-focus focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent-focus)_22%,transparent)]"
           />
         </FormField>
       </div>

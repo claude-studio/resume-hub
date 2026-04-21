@@ -34,6 +34,7 @@ function rowToValues(row: ProfileRow): ProfileEdit {
     fullName: row.full_name,
     phone: row.phone ?? '',
     headline: row.headline ?? '',
+    summary: row.summary ?? '',
   };
 }
 
@@ -91,6 +92,7 @@ export function useProfile({ initial }: { initial: ProfileRow }) {
           full_name: values.fullName,
           phone: values.phone?.trim() || null,
           headline: values.headline?.trim() || null,
+          summary: values.summary?.trim() || null,
         })
         .eq('user_id', initial.user_id)
         .select()

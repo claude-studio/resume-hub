@@ -27,6 +27,7 @@ const baseRow: ProfileRow = {
   email: 'gildong@example.com',
   phone: null,
   headline: null,
+  summary: null,
   created_at: '2026-04-22T00:00:00.000Z',
   updated_at: '2026-04-22T00:00:00.000Z',
 };
@@ -112,6 +113,21 @@ describe('ProfileForm (RHF)', () => {
     await user.click(screen.getByRole('button', { name: /^저장$/ }));
     expect(await screen.findByRole('button', { name: '저장됨' })).toBeInTheDocument();
     expect(updateMock).not.toHaveBeenCalled();
+  });
+
+  it('renders summary field with 0/1000 counter when profile has no summary', () => {
+    render(<ProfileForm initial={baseRow} />);
+    const summary = screen.getByLabelText('자기소개');
+    expect(summary).toHaveValue('');
+    expect(screen.getByText('0 / 1000')).toBeInTheDocument();
+  });
+
+  it('counts summary by code point (emoji = 1 not 2)', async () => {
+    const user = userEvent.setup();
+    render(<ProfileForm initial={baseRow} />);
+    const summary = screen.getByLabelText('자기소개');
+    await user.type(summary, '🙂🙂🙂');
+    expect(screen.getByText('3 / 1000')).toBeInTheDocument();
   });
 
   it('shows server error block when update fails and retains values', async () => {

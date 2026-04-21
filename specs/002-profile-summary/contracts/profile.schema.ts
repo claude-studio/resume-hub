@@ -1,10 +1,15 @@
+/**
+ * Contract: Zod validation schema for Profile edits (updated for summary).
+ * Source of truth for the implementation at
+ * `packages/shared/src/schemas/profile.ts`.
+ *
+ * Key decision: summary length is validated by code-point count
+ * (Array.from(str).length), matching PostgreSQL char_length().
+ * Plain z.string().max(1000) would use UTF-16 code units and drift from DB.
+ */
 import { z } from 'zod';
 
-/**
- * Count code points (not UTF-16 units). Matches PostgreSQL `char_length()`
- * so client validation aligns exactly with the DB CHECK constraints.
- */
-export function codePointCount(value: string): number {
+function codePointCount(value: string): number {
   return Array.from(value).length;
 }
 
@@ -37,3 +42,5 @@ export interface ProfileRow {
   created_at: string;
   updated_at: string;
 }
+
+export { codePointCount };

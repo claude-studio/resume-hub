@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { profileEditSchema } from './profile';
+import { codePointCount, profileEditSchema } from './profile';
 
 describe('profileEditSchema', () => {
   it('accepts minimum valid input (name only)', () => {
@@ -46,7 +46,72 @@ describe('profileEditSchema', () => {
       fullName: '홍길동',
       phone: '',
       headline: '',
+      summary: '',
     });
     expect(result.success).toBe(true);
+  });
+
+  describe('summary', () => {
+    it('accepts 1000 code points exactly', () => {
+      const result = profileEditSchema.safeParse({
+        fullName: '홍길동',
+        summary: 'a'.repeat(1000),
+      });
+      expect(result.success).toBe(true);
+    });
+
+    it('rejects 1001 code points', () => {
+      const result = profileEditSchema.safeParse({
+        fullName: '홍길동',
+        summary: 'a'.repeat(1001),
+      });
+      expect(result.success).toBe(false);
+    });
+
+    it('counts emoji by code points, not UTF-16 code units', () => {
+      // '🙂' is 1 code point but 2 UTF-16 code units.
+      // 500 emoji = 500 code points, well under 1000.
+      const result = profileEditSchema.safeParse({
+        fullName: '홍길동',
+        summary: '🙂'.repeat(500),
+      });
+      expect(result.success).toBe(true);
+    });
+
+    it('rejects 1001-code-point emoji string', () => {
+      const result = profileEditSchema.safeParse({
+        fullName: '홍길동',
+        summary: '🙂'.repeat(1001),
+      });
+      expect(result.success).toBe(false);
+    });
+
+    it('accepts newlines and unicode preserved', () => {
+      const result = profileEditSchema.safeParse({
+        fullName: '홍길동',
+        summary: '첫 줄\n둘째 줄\n\n빈 줄 뒤 내용',
+      });
+      expect(result.success).toBe(true);
+    });
+  });
+});
+
+describe('codePointCount', () => {
+  it('counts ASCII by char count', () => {
+    expect(codePointCount('hello')).toBe(5);
+  });
+
+  it('counts Korean by grapheme count (mostly equivalent)', () => {
+    expect(codePointCount('안녕하세요')).toBe(5);
+  });
+
+  it('counts emoji as 1 code point', () => {
+    expect(codePointCount('🙂')).toBe(1);
+    expect(codePointCount('🙂🙂🙂')).toBe(3);
+  });
+
+  it('differs from string.length on emoji', () => {
+    expect('🙂'.length).toBe(2);
+    expect(codePointCount('🙂')).toBe(1);
   });
 });
