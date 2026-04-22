@@ -1,3 +1,11 @@
 packages:
   - "apps/*"
   - "packages/*"
+
+# pnpm 10+ disables postinstall scripts by default as a security measure.
+# Explicitly allow the native/binary-bundling deps that downstream frameworks
+# (Next.js image optimization, esbuild, Vite/WXT internals) expect to have.
+allowBuilds:
+  esbuild: true
+  sharp: true
+  spawn-sync: true

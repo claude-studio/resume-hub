@@ -5,7 +5,8 @@
   "description": "통합 이력 관리 서비스 - 웹 서비스와 이력서 자동완성 익스텐션",
   "packageManager": "pnpm@10.15.1",
   "engines": {
-    "node": ">=20.18.0"
+    "node": ">=20.18.0",
+    "pnpm": ">=10.15.1"
   },
   "scripts": {
     "dev:service": "turbo run dev --filter=@resume-hub/web-service",
@@ -25,6 +26,7 @@
     "vitest": "^3.0.0"
   },
   "pnpm": {
+    "managePackageManagerVersions": false,
     "overrides": {
       "vite": "^6.0.0",
       "@vitejs/plugin-react": "^4.3.4",
