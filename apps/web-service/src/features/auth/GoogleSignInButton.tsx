@@ -1,16 +1,19 @@
 'use client';
 
 import { Button } from '@resume-hub/ui';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 
 export function GoogleSignInButton() {
   const [isPending, setIsPending] = useState(false);
-  const supabase = useMemo(() => createClient(), []);
 
   async function handleClick() {
     setIsPending(true);
     try {
+      // Lazy-create on click so static prerender of `/` never touches
+      // createClient() — avoids build-time throws when env vars are
+      // briefly missing or not yet configured on the host.
+      const supabase = createClient();
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
