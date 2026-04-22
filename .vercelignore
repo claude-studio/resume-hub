@@ -1,0 +1,13 @@
+specs/
+.specify/
+.claude/
+**/*.md
+!apps/web-service/**/*.md
+
+apps/web-extension/
+.env*
+!apps/web-service/.env.example
+
+.DS_Store
+.vscode/
+.idea/
