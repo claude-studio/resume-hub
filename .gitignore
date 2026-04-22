@@ -9,6 +9,9 @@ build
 .output
 .wxt
 
+# Turbo cache
+.turbo
+
 # TypeScript
 *.tsbuildinfo
 

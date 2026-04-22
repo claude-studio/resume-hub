@@ -8,24 +8,27 @@
     "node": ">=20.18.0"
   },
   "scripts": {
-    "dev:service": "pnpm --filter @resume-hub/web-service dev",
-    "dev:extension": "pnpm --filter @resume-hub/web-extension dev",
-    "build": "pnpm -r build",
-    "typecheck": "pnpm -r typecheck",
+    "dev:service": "turbo run dev --filter=@resume-hub/web-service",
+    "dev:extension": "turbo run dev --filter=@resume-hub/web-extension",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.0",
+    "turbo": "^2.3.3",
     "typescript": "^5.9.0",
     "vitest": "^3.0.0"
   },
   "pnpm": {
     "overrides": {
-      "@vitejs/plugin-react": "^4.3.4"
+      "vite": "^6.0.0",
+      "@vitejs/plugin-react": "^4.3.4",
+      "@tailwindcss/vite": "~4.0.0"
     }
   }
 }

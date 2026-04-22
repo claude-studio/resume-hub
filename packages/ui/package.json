@@ -12,11 +12,12 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run --passWithNoTests"
   },
   "peerDependencies": {
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.0"
   },
   "dependencies": {
     "clsx": "^2.1.1"
@@ -29,6 +30,7 @@
     "jsdom": "^25.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.0",
     "typescript": "^5.9.0",
     "vitest": "^3.0.0"
   }
