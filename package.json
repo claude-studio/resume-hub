@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "description": "통합 이력 관리 서비스 - 웹 서비스와 이력서 자동완성 익스텐션",
-  "packageManager": "pnpm@10.0.0",
+  "packageManager": "pnpm@10.15.1",
   "engines": {
     "node": ">=20.18.0"
   },
